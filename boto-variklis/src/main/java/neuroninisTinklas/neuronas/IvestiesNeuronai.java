@@ -1,43 +1,43 @@
-package de.codecentric.neuralnet.neuron;
+package neuroninisTinklas.neuronas;
 
-import de.codecentric.game.tictactoe.game.Field;
+import zaidimas.tictactoe.Laukas;
 
-public class InputNeuron extends Neuron {
+public class IvestiesNeuronai extends Neuronas {
 
-    private Field field;
+    private Laukas langelis;
 
-    private double value;
+    private double reiksme;
 
-    public void activate(Field field) {
-        this.field = field;
+    public void aktivuoti(Laukas langelis) {
+        this.langelis = langelis;
 
-        switch (field.getNumber()) {
+        switch (langelis.gautiNumeri()) {
 
             case 1:
             case 3:
             case 7:
             case 9:
-                value = 0.2d;
+                reiksme = 0.2d;
                 break;
 
             case 2:
             case 4:
             case 6:
             case 8:
-                value = 0.3d;
+                reiksme = 0.3d;
                 break;
 
             case 5:
-                value = 0.4d;
+                reiksme = 0.4d;
                 break;
         }
     }
 
-    public Field getField() {
-        return field;
+    public Laukas gautiLauka() {
+        return langelis;
     }
 
-    public double getValue() {
-        return value;
+    public double gautiReiksme() {
+        return reiksme;
     }
 }

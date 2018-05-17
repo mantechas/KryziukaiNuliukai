@@ -1,28 +1,28 @@
-package de.codecentric.neuralnet.layer;
+package neuroninisTinklas.sluoksnis;
 
-import de.codecentric.neuralnet.neuron.Neuron;
+import neuroninisTinklas.neuronas.Neuronas;
 
-public abstract class AbstractLayer {
+public abstract class AbstraktusSluoksnis {
 
-    private int numberOfNeurons;
+    private int neoronuKiekis;
 
-    public void initialize(int numberOfNeurons) {
-        this.numberOfNeurons = numberOfNeurons;
+    public void sudaryti(int neoronuKiekis) {
+        this.neoronuKiekis = neoronuKiekis;
         subInitialize();
     }
 
-    public int getNumberOfNeurons() {
-        return numberOfNeurons;
+    public int gautiNeuronuSkaiciu() {
+        return neoronuKiekis;
     }
 
-    public void print() {
-        for (int i = 0; i < getNumberOfNeurons(); i++) {
-            getNeuron(i).print();
+    public void spausdinti() {
+        for (int i = 0; i < gautiNeuronuSkaiciu(); i++) {
+            gautiNeurona(i).spausdinti();
         }
     }
 
     abstract void subInitialize();
 
-    abstract Neuron getNeuron(int num);
+    abstract Neuronas gautiNeurona(int numeris);
 
 }

@@ -1,27 +1,26 @@
-package de.codecentric.game.tools;
+package zaidimas.irankiai;
 
-import de.codecentric.game.playing.GameEngineInterface;
-import de.codecentric.game.tictactoe.game.Board;
-import de.codecentric.game.tictactoe.game.PlayerEnum;
+import zaidimas.tictactoe.Lenta;
+import zaidimas.tictactoe.Langeliai;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import zaidimas.tictactoe.ZaidimoVariklis;
 
 @Component
-public class RandomEngine implements GameEngineInterface {
+public class RandomEjimai implements ZaidimoVariklis {
 
     @Override
-    public int makeMove(Board board, PlayerEnum forPlayer, boolean trainingEnabled) {
+    public int eiti(Lenta lenta, Langeliai zaidejas, boolean mokymasis) {
 
-        List<Integer> validMoves = board.validMoves();
-        int randomNum = ThreadLocalRandom.current().nextInt(0, validMoves.size());
+        List<Integer> galimiEjimai = lenta.galimiEjimai();
+        int randomNumeris = ThreadLocalRandom.current().nextInt(0, galimiEjimai.size());
 
-        return validMoves.get(randomNum);
+        return galimiEjimai.get(randomNumeris);
     }
 
     @Override
-    public void resetBetweenGames() {
-        // Do nothing
+    public void perjungtiTarpZaidimu() {
     }
 }

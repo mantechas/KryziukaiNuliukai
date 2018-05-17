@@ -1,91 +1,91 @@
-package de.codecentric.neuralnet.layer;
+package neuroninisTinklas.sluoksnis;
 
-import de.codecentric.game.tictactoe.game.Board;
-import de.codecentric.game.tictactoe.game.Field;
-import de.codecentric.neuralnet.neuron.InputNeuron;
+import zaidimas.tictactoe.Lenta;
+import zaidimas.tictactoe.Laukas;
+import neuroninisTinklas.neuronas.IvestiesNeuronai;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InputLayer extends AbstractLayer {
+public class IvestiesSluoksnis extends AbstraktusSluoksnis {
 
-    private List<InputNeuron> inputNeurons;
+    private List<IvestiesNeuronai> ivestiesNeuronai;
 
     @Override
     public void subInitialize() {
-        inputNeurons = new ArrayList<>();
-        for (int i = 0; i < getNumberOfNeurons(); i++) {
-            InputNeuron n = new InputNeuron();
-            n.initialize(i,0, 9);
-            inputNeurons.add(n);
+        ivestiesNeuronai = new ArrayList<>();
+        for (int i = 0; i < gautiNeuronuSkaiciu(); i++) {
+            IvestiesNeuronai neuronas = new IvestiesNeuronai();
+            neuronas.priskirti(i,0, 9);
+            ivestiesNeuronai.add(neuronas);
         }
     }
 
-    public void fire(Board board) {
+    public void pradeti(Lenta lenta) {
 
-        int neuronNum = 0;
+        int neuronoNumeris = 0;
         for (int i = 1; i <= 9; i++) {
 
             //
             // Three neurons always representing the same field to differ between empty fields,
             // own fields and fields occupied by an opponent
             //
-            inputNeurons.get(neuronNum).activate(board.getField(i));
-            neuronNum++;
-            inputNeurons.get(neuronNum).activate(board.getField(i));
-            neuronNum++;
-            inputNeurons.get(neuronNum).activate(board.getField(i));
-            neuronNum++;
+            ivestiesNeuronai.get(neuronoNumeris).aktivuoti(lenta.gautiLangeli(i));
+            neuronoNumeris++;
+            ivestiesNeuronai.get(neuronoNumeris).aktivuoti(lenta.gautiLangeli(i));
+            neuronoNumeris++;
+            ivestiesNeuronai.get(neuronoNumeris).aktivuoti(lenta.gautiLangeli(i));
+            neuronoNumeris++;
         }
     }
 
     @Override
-    public InputNeuron getNeuron(int num) {
-        return inputNeurons.get(num);
+    public IvestiesNeuronai gautiNeurona(int numeris) {
+        return ivestiesNeuronai.get(numeris);
     }
 
-    public List<Double> getOutputWeigths(int num) {
+    public List<Double> gautiIsvestiesSvorius(int numeris) {
 
-        List<Double> weights = new ArrayList<>();
-        for (int i = 0; i < getNumberOfNeurons(); i++) {
-            weights.add(inputNeurons.get(i).getOutputWeights().get(num));
+        List<Double> svoriai = new ArrayList<>();
+        for (int i = 0; i < gautiNeuronuSkaiciu(); i++) {
+            svoriai.add(ivestiesNeuronai.get(i).gautiIsvestiesSvorius().get(numeris));
         }
 
-        return weights;
+        return svoriai;
     }
 
-    public List<Field> getFields() {
-        List<Field> fields = new ArrayList<>();
-        for (int i = 0; i < getNumberOfNeurons(); i++) {
-            fields.add(inputNeurons.get(i).getField());
+    public List<Laukas> gautiLaukus() {
+        List<Laukas> laukai = new ArrayList<>();
+        for (int i = 0; i < gautiNeuronuSkaiciu(); i++) {
+            laukai.add(ivestiesNeuronai.get(i).gautiLauka());
         }
 
-        return fields;
+        return laukai;
     }
 
-    public List<Double> getValues() {
-        List<Double> values = new ArrayList<>();
-        for (int i = 0; i < getNumberOfNeurons(); i++) {
-            values.add(inputNeurons.get(i).getValue());
+    public List<Double> gautiReiksmes() {
+        List<Double> reiksmes = new ArrayList<>();
+        for (int i = 0; i < gautiNeuronuSkaiciu(); i++) {
+            reiksmes.add(ivestiesNeuronai.get(i).gautiReiksme());
         }
 
-        return values;
+        return reiksmes;
     }
 
-    public void reward(int index, double value, List<Integer> listOfInputNeuronIndexes) {
+    public void duoti(int indeksas, double reiksme, List<Integer> neuronoIndeksuSarasas) {
 
-        for (Integer i : listOfInputNeuronIndexes) {
-            inputNeurons.get(i).getOutputWeights().set(index, inputNeurons.get(i).getOutputWeights().get(index) + 0.01d);
+        for (Integer i : neuronoIndeksuSarasas) {
+            ivestiesNeuronai.get(i).gautiIsvestiesSvorius().set(indeksas, ivestiesNeuronai.get(i).gautiIsvestiesSvorius().get(indeksas) + 0.01d);
         }
 
-        int inputNumIndex = index * 3;
-        for (int i = 0; i < getNumberOfNeurons(); i++) {
-            if (i == inputNumIndex) {
-                InputNeuron neuron = inputNeurons.get(i);
-                neuron.getOutputWeights().set(index, neuron.getOutputWeights().get(index) + value);
+        int IvestiesIndeksas = indeksas * 3;
+        for (int i = 0; i < gautiNeuronuSkaiciu(); i++) {
+            if (i == IvestiesIndeksas) {
+                IvestiesNeuronai neuronas = ivestiesNeuronai.get(i);
+                neuronas.gautiIsvestiesSvorius().set(indeksas, neuronas.gautiIsvestiesSvorius().get(indeksas) + reiksme);
 
-                if (neuron.getOutputWeights().get(index) >= 1) {
-                    neuron.getOutputWeights().set(index, 0.999d);
+                if (neuronas.gautiIsvestiesSvorius().get(indeksas) >= 1) {
+                    neuronas.gautiIsvestiesSvorius().set(indeksas, 0.999d);
                 }
             }
         }

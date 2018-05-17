@@ -1,39 +1,39 @@
-package de.codecentric.game.tictactoe.game;
+package zaidimas.tictactoe;
 
-public class Field {
+public class Laukas {
 
-    private PlayerEnum owner;
+    private Langeliai savininkas;
 
-    private int number;
+    private int numeris;
 
-    public Field(int number) {
-        this.number = number;
-        owner = PlayerEnum.NONE;
+    public Laukas(int numeris) {
+        this.numeris = numeris;
+        savininkas = Langeliai.Tuscias;
     }
 
-    public Field(int number, PlayerEnum owner) {
-        this.number = number;
-        this.owner = owner;
+    public Laukas(int numeris, Langeliai savininkas) {
+        this.numeris = numeris;
+        this.savininkas = savininkas;
     }
 
-    public Field copy() {
-        Field f = new Field(number, owner);
-        return f;
+    public Laukas kopijuoti() {
+        Laukas langelis = new Laukas(numeris, savininkas);
+        return langelis;
     }
 
-    public PlayerEnum getOwner() {
-        return owner;
+    public Langeliai gautiSavininka() {
+        return savininkas;
     }
 
-    public void setOwner(PlayerEnum owner) {
-        this.owner = owner;
+    public void priskirtiSavininka(Langeliai savininkas) {
+        this.savininkas = savininkas;
     }
 
-    public int getNumber() {
-        return number;
+    public int gautiNumeri() {
+        return numeris;
     }
 
-    public String screenRepresentation() {
-        return " (" + number + ") " + owner.getRepresentation() + " ";
+    public String erdvesAtstovavimas() {
+        return " (" + numeris + ") " + savininkas.gautiAtstovavima() + " ";
     }
 }

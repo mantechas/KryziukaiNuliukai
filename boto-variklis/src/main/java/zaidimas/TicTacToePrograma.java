@@ -1,8 +1,8 @@
-package de.codecentric.game.tictactoe;
+package zaidimas;
 
-import de.codecentric.game.playing.HumanPlay;
-import de.codecentric.game.playing.SelfPlay;
-import de.codecentric.neuralnet.Training;
+import zaidimas.tictactoe.ZmogausZaidimas;
+import zaidimas.tictactoe.ZaidimasPriesSavePati;
+import neuroninisTinklas.Mokymasis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -12,40 +12,41 @@ import org.springframework.context.annotation.ComponentScan;
 
 
 @SpringBootApplication
-@ComponentScan("de.codecentric")
-public class TicTacToeApplication implements CommandLineRunner {
+@ComponentScan("zaidimas")
+@ComponentScan("neuroninisTinklas")
+public class TicTacToePrograma implements CommandLineRunner {
 
     @Autowired
-    private SelfPlay selfPlay;
+    private ZaidimasPriesSavePati zaidimasPriesSavePati;
 
     @Autowired
-    private HumanPlay humanPlay;
+    private ZmogausZaidimas zmogausZaidimas;
 
     @Autowired
-    private Training training;
+    private Mokymasis mokymasis;
 
-    @Value("${learning.stage}")
-    private int learningStage;
+    @Value("${mokymosi.stadija}")
+    private int mokymosiStadija;
 
-    @Value("${selfplay.enabled}")
-    private boolean selfplayEnabled;
+    @Value("${ijungtas.zaidimasPriesSave}")
+    private boolean ijungtasZaidimasPriesSave;
 
-    @Value("${humanplay.enabled}")
-    private boolean humanplayEnabled;
+    @Value("${ijungtas.zaidimasPriesZmogu}")
+    private boolean ijungtasZaidimasPriesZmogu;
 
 
     public static void main(String[] args) {
-		SpringApplication.run(TicTacToeApplication.class, args);
+		SpringApplication.run(TicTacToePrograma.class, args);
 	}
 
     @Override
     public void run(String... args) throws Exception {
-        if (selfplayEnabled) {
-            selfPlay.play();
+        if (ijungtasZaidimasPriesSave) {
+            zaidimasPriesSavePati.Zaisti();
         }
 
-        if (humanplayEnabled) {
-            humanPlay.play();
+        if (ijungtasZaidimasPriesZmogu) {
+            zmogausZaidimas.Zaisti();
         }
     }
 }

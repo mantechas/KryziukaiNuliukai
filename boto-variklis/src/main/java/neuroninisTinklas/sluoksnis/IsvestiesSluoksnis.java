@@ -1,33 +1,33 @@
-package de.codecentric.neuralnet.layer;
+package neuroninisTinklas.sluoksnis;
 
-import de.codecentric.neuralnet.neuron.OutputNeuron;
+import neuroninisTinklas.neuronas.IsvestiesNeuronai;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OutputLayer extends AbstractLayer {
+public class IsvestiesSluoksnis extends AbstraktusSluoksnis {
 
-    private List<OutputNeuron> outputNeurons;
+    private List<IsvestiesNeuronai> isvestiesNeuronai;
 
-    private int computerMove;
+    private int kompiuterioEjimas;
 
     @Override
     public void subInitialize() {
-        outputNeurons = new ArrayList<>();
-        for (int i = 0; i < getNumberOfNeurons(); i++) {
-            OutputNeuron n = new OutputNeuron();
-            n.initialize(i,9, 1);
-            outputNeurons.add(n);
+        isvestiesNeuronai = new ArrayList<>();
+        for (int i = 0; i < gautiNeuronuSkaiciu(); i++) {
+            IsvestiesNeuronai neuronas = new IsvestiesNeuronai();
+            neuronas.priskirti(i,9, 1);
+            isvestiesNeuronai.add(neuronas);
         }
     }
 
     @Override
-    public OutputNeuron getNeuron(int num) {
-        return outputNeurons.get(num);
+    public IsvestiesNeuronai gautiNeurona(int numeris) {
+        return isvestiesNeuronai.get(numeris);
     }
 
-    public int fire(HiddenLayer hiddenLayer) {
-        return outputNeurons.get(0).fire(hiddenLayer.candidateMoves(), hiddenLayer.positionValues(),
-                hiddenLayer.getOutputWeigths(0));
+    public int pradeti(PasleptasSluoksnis pasleptasSluoksnis) {
+        return isvestiesNeuronai.get(0).pradeti(pasleptasSluoksnis.kandidatinisEjimas(), pasleptasSluoksnis.vietosReiksmes(),
+                pasleptasSluoksnis.gautiIsvestiesSvorius(0));
     }
 }

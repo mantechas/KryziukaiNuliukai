@@ -1,12 +1,12 @@
-package de.codecentric.game.playing;
+package zaidimas.tictactoe;
 
-import de.codecentric.game.tictactoe.game.Board;
-import de.codecentric.game.tictactoe.game.PlayerEnum;
+import zaidimas.tictactoe.Lenta;
+import zaidimas.tictactoe.Langeliai;
 
-public interface GameEngineInterface {
+public interface ZaidimoVariklis {
 
-    int makeMove(Board board, PlayerEnum forPlayer, boolean trainingEnables);
+    int eiti(Lenta lenta, Langeliai zaidejas, boolean ijungtasMokymasis);
 
-    void resetBetweenGames();
+    void perjungtiTarpZaidimu();
 
 }

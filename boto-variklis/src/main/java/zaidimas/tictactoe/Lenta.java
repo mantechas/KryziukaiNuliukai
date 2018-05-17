@@ -1,75 +1,75 @@
-package de.codecentric.game.tictactoe.game;
+package zaidimas.tictactoe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Board {
+public class Lenta {
 
-    private static final int ROW_DIMENSION = 3;
+    private static final int Eilutes = 3;
 
-    private static final int COL_DIMENSION = 3;
+    private static final int Stulpeliai = 3;
 
-    private Map<Integer, Field> playingBoard = new HashMap<>();
+    private Map<Integer, Laukas> zaidimoLenta = new HashMap<>();
 
-    public Board() {
-        initialize();
+    public Lenta() {
+        sudaryti();
     }
 
-    public void initialize() {
-        for (int row = 1; row <= ROW_DIMENSION; row++) {
-            for (int col = 1; col <= COL_DIMENSION; col++) {
-                Field field = new Field(number(row, col));
-                playingBoard.put(number(row, col), field);
+    public void sudaryti() {
+        for (int eilute = 1; eilute <= Eilutes; eilute++) {
+            for (int stulpelis = 1; stulpelis <= Stulpeliai; stulpelis++) {
+                Laukas laukas = new Laukas(skaicius(eilute, stulpelis));
+                zaidimoLenta.put(skaicius(eilute, stulpelis), laukas);
             }
         }
     }
 
-    public void move(int number, PlayerEnum owner) {
-        if (playingBoard.get(number).getOwner() != PlayerEnum.NONE) {
-            throw new RuntimeException("Illegal move, field already occupied: " + number);
+    public void ejimas(int skaicius, Langeliai savininkas) {
+        if (zaidimoLenta.get(skaicius).gautiSavininka() != Langeliai.Tuscias) {
+            throw new RuntimeException("Negalimas ejimas, langelis jau užimtas: " + skaicius);
         }
 
-        Field f = playingBoard.get(number);
-        f.setOwner(owner);
+        Laukas langelis = zaidimoLenta.get(skaicius);
+        langelis.priskirtiSavininka(savininkas);
     }
 
-    public Board copy() {
-        Board board = new Board();
-        for (int row = 1; row <= ROW_DIMENSION; row++) {
-            for (int col = 1; col <= COL_DIMENSION; col++) {
-                Field f = this.playingBoard.get(number(row, col));
-                board.setField(f.getNumber(), f.copy());
+    public Lenta kopijuoti() {
+        Lenta lenta = new Lenta();
+        for (int eilute = 1; eilute <= Eilutes; eilute++) {
+            for (int stulpelis = 1; stulpelis <= Stulpeliai; stulpelis++) {
+                Laukas langelis = this.zaidimoLenta.get(skaicius(eilute, stulpelis));
+                lenta.priskirtiLangeli(langelis.gautiNumeri(), langelis.kopijuoti());
             }
         }
 
-        return board;
+        return lenta;
     }
 
-    public List<Integer> validMoves() {
+    public List<Integer> galimiEjimai() {
 
-        List<Integer> validMoves = new ArrayList<>();
-        for (int row = 1; row <= ROW_DIMENSION; row++) {
-            for (int col = 1; col <= COL_DIMENSION; col++) {
-                if (isValid(row, col)) {
-                    validMoves.add(number(row, col));
+        List<Integer> galimiEjimai = new ArrayList<>();
+        for (int eilute = 1; eilute <= Eilutes; eilute++) {
+            for (int stulpelis = 1; stulpelis <= Stulpeliai; stulpelis++) {
+                if (Lenta.this.yraLeistinas(eilute, stulpelis)) {
+                    galimiEjimai.add(skaicius(eilute, stulpelis));
                 }
             }
         }
 
-        return validMoves;
+        return galimiEjimai;
     }
 
-    public boolean isValid(int row, int col) {
-        return isValid((number(row, col)));
+    public boolean yraLeistinas(int eilute, int stulpelis) {
+        return yraLeistinas((skaicius(eilute, stulpelis)));
     }
 
-    public boolean isValid(int n) {
+    public boolean yraLeistinas(int vieta) {
 
-        if (n > ROW_DIMENSION * COL_DIMENSION) {
+        if (vieta > Eilutes * Stulpeliai) {
             return false;
-        } else if (playingBoard.get(n).getOwner() == PlayerEnum.NONE) {
+        } else if (zaidimoLenta.get(vieta).gautiSavininka() == Langeliai.Tuscias) {
             return true;
         } else {
             return false;
@@ -77,100 +77,96 @@ public class Board {
     }
 
 
-    public boolean isWon(PlayerEnum player) {
+    public boolean laimeta(Langeliai zaidejas) {
 
-        boolean won = false;
+        boolean laimeta = false;
 
-        // Check three in a row
-        for (int row = 1; row <= ROW_DIMENSION; row++) {
-            int count = 0;
-            for (int col = 1; col <= COL_DIMENSION; col++) {
-                if (playingBoard.get(number(row, col)).getOwner() == player) {
-                    count++;
+        for (int eilute = 1; eilute <= Eilutes; eilute++) {
+            int kiekis = 0;
+            for (int stulpelis = 1; stulpelis <= Stulpeliai; stulpelis++) {
+                if (zaidimoLenta.get(skaicius(eilute, stulpelis)).gautiSavininka() == zaidejas) {
+                    kiekis++;
                 } else {
                     break;
                 }
             }
-            if (count == COL_DIMENSION) {
-                won = true;
+            if (kiekis == Stulpeliai) {
+                laimeta = true;
             }
         }
 
-        // Check three in a col
-        for (int col = 1; col <= COL_DIMENSION; col++) {
-            int count = 0;
-            for (int row = 1; row <= ROW_DIMENSION; row++) {
-                if (playingBoard.get(number(row, col)).getOwner() == player) {
-                    count++;
+        for (int stulpelis = 1; stulpelis <= Stulpeliai; stulpelis++) {
+            int kiekis = 0;
+            for (int eilute = 1; eilute <= Eilutes; eilute++) {
+                if (zaidimoLenta.get(skaicius(eilute, stulpelis)).gautiSavininka() == zaidejas) {
+                    kiekis++;
                 } else {
                     break;
                 }
             }
-            if (count == ROW_DIMENSION) {
-                won = true;
+            if (kiekis == Eilutes) {
+                laimeta = true;
             }
         }
 
-        // Check three diagonal left top to right bottom
-        int diagonal = 0;
-        if (playingBoard.get(number(1, 1)).getOwner() == player) {
-            diagonal++;
+        int istrizai = 0;
+        if (zaidimoLenta.get(skaicius(1, 1)).gautiSavininka() == zaidejas) {
+            istrizai++;
         }
-        if (playingBoard.get(number(2, 2)).getOwner() == player) {
-            diagonal++;
+        if (zaidimoLenta.get(skaicius(2, 2)).gautiSavininka() == zaidejas) {
+            istrizai++;
         }
-        if (playingBoard.get(number(3, 3)).getOwner() == player) {
-            diagonal++;
-        }
-
-        if (diagonal == COL_DIMENSION) {
-            won = true;
+        if (zaidimoLenta.get(skaicius(3, 3)).gautiSavininka() == zaidejas) {
+            istrizai++;
         }
 
-        // Check three diagonal left bottom to right top
-        diagonal = 0;
-        if (playingBoard.get(number(1, 3)).getOwner() == player) {
-            diagonal++;
-        }
-        if (playingBoard.get(number(2, 2)).getOwner() == player) {
-            diagonal++;
-        }
-        if (playingBoard.get(number(3, 1)).getOwner() == player) {
-            diagonal++;
+        if (istrizai == Stulpeliai) {
+            laimeta = true;
         }
 
-        if (diagonal == COL_DIMENSION) {
-            won = true;
+        istrizai = 0;
+        if (zaidimoLenta.get(skaicius(1, 3)).gautiSavininka() == zaidejas) {
+            istrizai++;
+        }
+        if (zaidimoLenta.get(skaicius(2, 2)).gautiSavininka() == zaidejas) {
+            istrizai++;
+        }
+        if (zaidimoLenta.get(skaicius(3, 1)).gautiSavininka() == zaidejas) {
+            istrizai++;
         }
 
-        return won;
+        if (istrizai == Stulpeliai) {
+            laimeta = true;
+        }
+
+        return laimeta;
     }
 
-    public boolean isDraw() {
-        if (validMoves().size() == 0) {
+    public boolean lygiosios() {
+        if (galimiEjimai().size() == 0) {
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean gameEnded() {
+    public boolean zaidimoPabaiga() {
 
-        if (isWon(PlayerEnum.O)) {
-            printToScreen();
-            System.out.println("Game won by " + PlayerEnum.O.getRepresentation() + "!");
+        if (laimeta(Langeliai.O)) {
+            spausdinti();
+            System.out.println("Zaidimas laimetas: " + Langeliai.O.gautiAtstovavima() + "!");
             return true;
         }
 
-        if (isWon(PlayerEnum.X)) {
-            printToScreen();
-            System.out.println("Game won by " + PlayerEnum.X.getRepresentation() + "!");
+        if (laimeta(Langeliai.X)) {
+            spausdinti();
+            System.out.println("Zaidimas laimetas: " + Langeliai.X.gautiAtstovavima() + "!");
             return true;
         }
 
-        if (isDraw()) {
-            printToScreen();
-            System.out.println("Game is draw!");
+        if (lygiosios()) {
+            spausdinti();
+            System.out.println("Zaidimas baigesi lygiosiomis");
             return true;
         }
 
@@ -178,13 +174,13 @@ public class Board {
         return false;
     }
 
-    public void printToScreen() {
+    public void spausdinti() {
 
         System.out.println("==========================");
-        for (int row = 1; row <= ROW_DIMENSION; row++) {
-            for (int col = 1; col <= COL_DIMENSION; col++) {
-                Field f = playingBoard.get(number(row, col));
-                System.out.print(f.screenRepresentation());
+        for (int eilute = 1; eilute <= Eilutes; eilute++) {
+            for (int stulpelis = 1; stulpelis <= Stulpeliai; stulpelis++) {
+                Laukas langelis = zaidimoLenta.get(skaicius(eilute, stulpelis));
+                System.out.print(langelis.erdvesAtstovavimas());
             }
             System.out.println();
         }
@@ -192,16 +188,16 @@ public class Board {
 
     }
 
-    public Field getField(int number) {
-        return playingBoard.get(number);
+    public Laukas gautiLangeli(int skaicius) {
+        return zaidimoLenta.get(skaicius);
     }
 
-    private void setField(int number, Field f) {
-        playingBoard.put(number, f);
+    private void priskirtiLangeli(int skaicius, Laukas langelis) {
+        zaidimoLenta.put(skaicius, langelis);
     }
 
-    private int number(int x, int y) {
-        return ((x-1) * COL_DIMENSION) + y;
+    private int skaicius(int eilute, int stulpelis) {
+        return ((eilute-1) * Stulpeliai) + stulpelis;
     }
 
 }

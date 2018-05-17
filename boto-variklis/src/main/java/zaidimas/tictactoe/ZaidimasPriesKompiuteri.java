@@ -1,50 +1,50 @@
-package de.codecentric.game.playing;
+package zaidimas.tictactoe;
 
-import de.codecentric.game.tictactoe.game.Board;
-import de.codecentric.game.tictactoe.game.PlayerEnum;
+import zaidimas.tictactoe.Lenta;
+import zaidimas.tictactoe.Langeliai;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AutoPlay {
+public class ZaidimasPriesKompiuteri {
 
-    public GameResultEnum play(GameEngineInterface engine, GameEngineInterface opponent, PlayerEnum enginePlayer, PlayerEnum opponentPlayer, boolean trainingEnabled) {
+    public ZaidimoRezultatai zaisti(ZaidimoVariklis botas, ZaidimoVariklis priesininkas, Langeliai Botas, Langeliai Priesininkas, boolean mokymasis) {
 
-        engine.resetBetweenGames();
-        opponent.resetBetweenGames();
+        botas.perjungtiTarpZaidimu();
+        priesininkas.perjungtiTarpZaidimu();
 
-        Board board = new Board();
-        GameResultEnum gameResult = null;
-        int moveNum = 0;
+        Lenta lenta = new Lenta();
+        ZaidimoRezultatai zaidimoRezultatas = null;
+        int ejimoNumeris = 0;
 
 
-        while (gameResult == null) {
+        while (zaidimoRezultatas == null) {
 
-            moveNum++;
-            if (moveNum > 1 || enginePlayer == PlayerEnum.X) {
-                int engineMove = engine.makeMove(board.copy(), enginePlayer, trainingEnabled);
-                board.move(engineMove, enginePlayer);
-                if (board.gameEnded()) {
-                    if (board.isWon(enginePlayer)) {
-                        gameResult = GameResultEnum.ENGINE_WON;
+            ejimoNumeris++;
+            if (ejimoNumeris > 1 || Botas == Langeliai.X) {
+                int botoEjimas = botas.eiti(lenta.kopijuoti(), Botas, mokymasis);
+                lenta.ejimas(botoEjimas, Botas);
+                if (lenta.zaidimoPabaiga()) {
+                    if (lenta.laimeta(Botas)) {
+                        zaidimoRezultatas = ZaidimoRezultatai.Botas_Laimejo;
                     } else {
-                        gameResult = GameResultEnum.DRAW;
+                        zaidimoRezultatas = ZaidimoRezultatai.Lygiosios;
                     }
                 }
             }
 
-            if (gameResult == null) {
-                int opponentMove = opponent.makeMove(board.copy(), opponentPlayer, trainingEnabled);
-                board.move(opponentMove, opponentPlayer);
-                if (board.gameEnded()) {
-                    if (board.isWon(opponentPlayer)) {
-                        gameResult = GameResultEnum.OPPONENT_WON;
+            if (zaidimoRezultatas == null) {
+                int priesininkoEjimas = priesininkas.eiti(lenta.kopijuoti(), Priesininkas, mokymasis);
+                lenta.ejimas(priesininkoEjimas, Priesininkas);
+                if (lenta.zaidimoPabaiga()) {
+                    if (lenta.laimeta(Priesininkas)) {
+                        zaidimoRezultatas = ZaidimoRezultatai.Priesininkas_Laimejo;
                     } else {
-                        gameResult = GameResultEnum.DRAW;
+                        zaidimoRezultatas = ZaidimoRezultatai.Lygiosios;
                     }
                 }
             }
         }
 
-        return gameResult;
+        return zaidimoRezultatas;
     }
 }

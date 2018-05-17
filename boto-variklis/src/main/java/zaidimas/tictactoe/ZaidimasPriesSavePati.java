@@ -1,78 +1,78 @@
-package de.codecentric.game.playing;
+package zaidimas.tictactoe;
 
-import de.codecentric.game.playing.AutoPlay;
-import de.codecentric.game.playing.GameResultEnum;
-import de.codecentric.game.tools.PlayerToggle;
-import de.codecentric.game.tools.RandomEngine;
-import de.codecentric.game.tools.TimeSeries;
-import de.codecentric.neuralnet.GammaEngine;
-import de.codecentric.neuralnet.Training;
+import zaidimas.tictactoe.ZaidimasPriesKompiuteri;
+import zaidimas.tictactoe.ZaidimoRezultatai;
+import zaidimas.irankiai.ZaidejoPriskirimas;
+import zaidimas.irankiai.RandomEjimai;
+import zaidimas.irankiai.LaikoEilutes;
+import neuroninisTinklas.BotoVariklis;
+import neuroninisTinklas.Mokymasis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SelfPlay {
+public class ZaidimasPriesSavePati {
 
     @Autowired
-    private RandomEngine randomEngine;
+    private RandomEjimai randomVariklis;
 
     @Autowired
-    private AutoPlay autoPlay;
+    private ZaidimasPriesKompiuteri zaidimasPrieskompiuteri;
 
     @Autowired
-    private Training training;
+    private Mokymasis mokymasis;
 
-    @Value("${selfplay.games}")
-    private int selfplayGames;
+    @Value("${zaidimoPriesSave.zaidimai}")
+    private int priesSavePatiZaidimai;
 
-    @Value("${selfplay.matches}")
-    private int selfplayMatches;
+    @Value("${zaidimoPriesSave.raundai}")
+    private int priesSavePatiRoundai;
 
-    @Value("${learning.stage}")
-    private int learningStage;
+    @Value("${mokymosi.stadija}")
+    private int mokymosiStadija;
 
-    public void play() {
+    public void Zaisti() {
 
-        TimeSeries overallSeries = new TimeSeries();
-        for (int j = 0; j < selfplayMatches; j++) {
+        LaikoEilutes bendraSeries = new LaikoEilutes();
+        for (int j = 0; j < priesSavePatiRoundai; j++) {
 
-            GammaEngine gammaEngine = new GammaEngine(learningStage);
-            training.train(gammaEngine);
+            BotoVariklis botoVariklis = new BotoVariklis(mokymosiStadija);
+            mokymasis.mokyti(botoVariklis);
 
-            int gammaWins = 0;
-            int opponentWins = 0;
-            int draws = 0;
-            TimeSeries timeSeries = new TimeSeries();
+            int botoLaimejimai = 0;
+            int priesininkoLaimejimai = 0;
+            int lygiosios = 0;
+            LaikoEilutes laikoEilutes = new LaikoEilutes();
 
-            PlayerToggle playerToggle = new PlayerToggle();
+            ZaidejoPriskirimas zaidejoPriskirimas = new ZaidejoPriskirimas();
 
-            for (int i = 0; i < selfplayGames; i++) {
+            for (int i = 0; i < priesSavePatiZaidimai; i++) {
 
-                GameResultEnum gameResult = autoPlay.play(gammaEngine, randomEngine,
-                        playerToggle.getGammaPlayer(), playerToggle.getOpponentPlayer(), false);
+                ZaidimoRezultatai zaidimoRezultatai = zaidimasPrieskompiuteri.zaisti(botoVariklis, randomVariklis,
+                        zaidejoPriskirimas.gautiBota(), zaidejoPriskirimas.gautiPriesininka(), false);
 
-                if (gameResult == GameResultEnum.DRAW) {
-                    draws++;
-                } else if (gameResult == GameResultEnum.ENGINE_WON) {
-                    gammaWins++;
-                } else if (gameResult == GameResultEnum.OPPONENT_WON) {
-                    opponentWins++;
+                if (zaidimoRezultatai == ZaidimoRezultatai.Lygiosios) {
+                    lygiosios++;
+                } else if (zaidimoRezultatai == ZaidimoRezultatai.Botas_Laimejo) {
+                    botoLaimejimai++;
+                } else if (zaidimoRezultatai == ZaidimoRezultatai.Priesininkas_Laimejo) {
+                    priesininkoLaimejimai++;
                 }
 
-                timeSeries.add(gammaWins, opponentWins, draws);
-                playerToggle.toggle();
+                laikoEilutes.prideti(botoLaimejimai, priesininkoLaimejimai, lygiosios);
+                zaidejoPriskirimas.priskirti();
             }
 
-            System.out.println("Training results:");
-            System.out.println("Gamma  wins  : " + gammaWins);
-            System.out.println("Opponent wins: " + opponentWins);
-            System.out.println("Draws        : " + draws);
+            System.out.println("Mokymosi rezultatai:");
+            System.out.println("Boto laimejimai: " + botoLaimejimai);
+            System.out.println("Priesininko laimejimai: " + priesininkoLaimejimai);
+            System.out.println("Lygiosios        : " + lygiosios);
 
-            timeSeries.write("series/gamma-series-" + j + ".csv");
-            overallSeries.add(gammaWins, opponentWins, draws);
+            laikoEilutes.spausdintiIFaila("Rezultatai\\boto-" + (j+1) + "-rez.csv");
+            bendraSeries.prideti(botoLaimejimai, priesininkoLaimejimai, lygiosios);
         }
 
-        overallSeries.write("series/overall-series.csv");
+        bendraSeries.spausdintiIFaila("Rezultatai\\bendri-rez.csv");
     }
 }

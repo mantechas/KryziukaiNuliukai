@@ -1,20 +1,20 @@
-package de.codecentric.game.tictactoe.game;
+package zaidimas.tictactoe;
 
-public enum PlayerEnum {
+public enum Langeliai {
 
-    NONE("-"),
+    Tuscias("-"),
 
     O("O"),
 
     X("X");
 
-    private String representation;
+    private String atstovavimas;
 
-    PlayerEnum(String represnetation) {
-        this.representation = represnetation;
+    Langeliai(String atstovavimas) {
+        this.atstovavimas = atstovavimas;
     }
 
-    public String getRepresentation() {
-        return representation;
+    public String gautiAtstovavima() {
+        return atstovavimas;
     }
 }

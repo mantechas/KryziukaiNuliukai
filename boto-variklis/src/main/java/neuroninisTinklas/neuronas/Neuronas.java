@@ -1,75 +1,75 @@
-package de.codecentric.neuralnet.neuron;
+package neuroninisTinklas.neuronas;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Neuron {
+public class Neuronas {
 
-    private List<Double> inputWeights;
+    private List<Double> ivestiesSvoriai;
 
-    private List<Double> outputWeights;
+    private List<Double> isvestiesSvoriai;
 
-    private int numberOfInputWeights;
+    private int ivestiesSvoriuNumeris;
 
-    private int numberOfOutputWeights;
+    private int isvestiesSvoriuNumeris;
 
-    private int number;
+    private int numeris;
 
-    public void initialize(int number, int numberOfInputWeights, int numberOfOutputWeights) {
-        this.number = number;
-        this.numberOfInputWeights = numberOfInputWeights;
-        this.numberOfOutputWeights = numberOfOutputWeights;
+    public void priskirti(int numeris, int ivestiesSvoriuNumeris, int isvestiesSvoriuNumeris) {
+        this.numeris = numeris;
+        this.ivestiesSvoriuNumeris = ivestiesSvoriuNumeris;
+        this.isvestiesSvoriuNumeris = isvestiesSvoriuNumeris;
 
-        inputWeights = new ArrayList<>();
-        for (int i = 0; i < numberOfInputWeights; i++) {
-            inputWeights.add(initialWeight());
+        ivestiesSvoriai = new ArrayList<>();
+        for (int i = 0; i < ivestiesSvoriuNumeris; i++) {
+            ivestiesSvoriai.add(pradinisSvoris());
         }
 
-        outputWeights = new ArrayList<>();
-        for (int o = 0; o < numberOfOutputWeights; o++) {
-            outputWeights.add(initialWeight());
+        isvestiesSvoriai = new ArrayList<>();
+        for (int j = 0; j < isvestiesSvoriuNumeris; j++) {
+            isvestiesSvoriai.add(pradinisSvoris());
         }
     }
 
-    public void print() {
-        System.out.print("Input weights for neuron " + number + ": ");
-        for (int i = 0; i < numberOfInputWeights; i++) {
-            System.out.print("[" + inputWeights.get(i) + "] ");
-        }
-        System.out.println();
-
-        System.out.print("Output weights for neuron " + number + ": ");
-        for (int i = 0; i < numberOfOutputWeights; i++) {
-            System.out.print("[" + outputWeights.get(i) + "] ");
+    public void spausdinti() {
+        System.out.print("Ivesties neuronu svoriai " + numeris + ": ");
+        for (int i = 0; i < ivestiesSvoriuNumeris; i++) {
+            System.out.print("[" + ivestiesSvoriai.get(i) + "] ");
         }
         System.out.println();
+
+        System.out.print("Isvesties neuronu svoriai " + numeris + ": ");
+        for (int i = 0; i < isvestiesSvoriuNumeris; i++) {
+            System.out.print("[" + isvestiesSvoriai.get(i) + "] ");
+        }
+        System.out.println();
     }
 
-    public List<Double> getInputWeights() {
-        return inputWeights;
+    public List<Double> gautiIvestiesSvorius() {
+        return ivestiesSvoriai;
     }
 
-    public void setInputWeights(List<Double> inputWeights) {
-        this.inputWeights = inputWeights;
+    public void priskirtiIvestiesSvorius(List<Double> ivestiesSvoriai) {
+        this.ivestiesSvoriai = ivestiesSvoriai;
     }
 
-    public List<Double> getOutputWeights() {
-        return outputWeights;
+    public List<Double> gautiIsvestiesSvorius() {
+        return isvestiesSvoriai;
     }
 
-    public void setOutputWeights(List<Double> outputWeights) {
-        this.outputWeights = outputWeights;
+    public void priskirtiIsvestiesSvorius(List<Double> isvestiesSvoriai) {
+        this.isvestiesSvoriai = isvestiesSvoriai;
     }
 
-    public int getNumber() {
-        return number;
+    public int gautiNumeri() {
+        return numeris;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void priskirtiNumeri(int numeris) {
+        this.numeris = numeris;
     }
 
-    private double initialWeight() {
+    private double pradinisSvoris() {
         return Math.random();
     }
 

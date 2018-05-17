@@ -1,50 +1,50 @@
-package de.codecentric.neuralnet.neuron;
+package neuroninisTinklas.neuronas;
 
 import java.util.List;
 
-public class OutputNeuron extends Neuron {
+public class IsvestiesNeuronai extends Neuronas {
 
-    private int firstMoveIndex = -1;
+    private int pirmoEjimoIndeksas = -1;
 
-    private int lastMoveIndex;
+    private int paskutinioEjimoIndeksas;
 
-    public int fire(List<Boolean> candidateMoves, List<Double> positionValues, List<Double> inputWeights) {
+    public int pradeti(List<Boolean> kandidatiniaiEjimai, List<Double> vietosReiksmes, List<Double> ivestiesSvoriai) {
 
-        setInputWeights(inputWeights);
+        priskirtiIvestiesSvorius(ivestiesSvoriai);
 
-        int moveIndex = 0;
-        double lastValue = 0d;
+        int ejimoIndeksas = 0;
+        double paskutineReiksme = 0d;
 
-        for (int i = 0; i < candidateMoves.size(); i++) {
+        for (int i = 0; i < kandidatiniaiEjimai.size(); i++) {
 
-            if (candidateMoves.get(i) == true) {
+            if (kandidatiniaiEjimai.get(i) == true) {
 
-                double value = 1 / (1 + Math.exp((positionValues.get(i) * inputWeights.get(i)) * -1));
+                double reiksme = 1 / (1 + Math.exp((vietosReiksmes.get(i) * ivestiesSvoriai.get(i)) * -1));
 
-                if (value > lastValue) {
-                    moveIndex = i;
-                    lastValue = value;
+                if (reiksme > paskutineReiksme) {
+                    ejimoIndeksas = i;
+                    paskutineReiksme = reiksme;
                 }
             }
         }
 
-        lastMoveIndex = moveIndex;
-        if (firstMoveIndex == -1) {
-            firstMoveIndex = moveIndex;
+        paskutinioEjimoIndeksas = ejimoIndeksas;
+        if (pirmoEjimoIndeksas == -1) {
+            pirmoEjimoIndeksas = ejimoIndeksas;
         }
 
-        return lastMoveIndex+1;
+        return paskutinioEjimoIndeksas+1;
     }
 
-    public int getLastMoveIndex() {
-        return lastMoveIndex;
+    public int gautiPraeitaEjima() {
+        return paskutinioEjimoIndeksas;
     }
 
-    public int getFirstMoveIndex() {
-        return firstMoveIndex;
+    public int gautiPirmaEjima() {
+        return pirmoEjimoIndeksas;
     }
 
-    public void resetBetweenGames() {
-        firstMoveIndex = -1;
+    public void perjungtiTarpZaidimu() {
+        pirmoEjimoIndeksas = -1;
     }
 }

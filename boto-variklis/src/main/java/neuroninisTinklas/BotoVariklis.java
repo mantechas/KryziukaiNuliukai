@@ -1,73 +1,73 @@
-package de.codecentric.neuralnet;
+package neuroninisTinklas;
 
-import de.codecentric.game.playing.GameEngineInterface;
-import de.codecentric.game.tictactoe.game.Board;
-import de.codecentric.game.tictactoe.game.PlayerEnum;
-import de.codecentric.neuralnet.layer.HiddenLayer;
-import de.codecentric.neuralnet.layer.InputLayer;
-import de.codecentric.neuralnet.layer.OutputLayer;
+import zaidimas.tictactoe.Lenta;
+import zaidimas.tictactoe.Langeliai;
+import neuroninisTinklas.sluoksnis.PasleptasSluoksnis;
+import neuroninisTinklas.sluoksnis.IvestiesSluoksnis;
+import neuroninisTinklas.sluoksnis.IsvestiesSluoksnis;
+import zaidimas.tictactoe.ZaidimoVariklis;
 
-public class GammaEngine implements GameEngineInterface {
+public class BotoVariklis implements ZaidimoVariklis {
 
-    private int learningStage;
+    private int mokymosiStadija;
 
-    private InputLayer inputLayer;
+    private IvestiesSluoksnis ivestiesSluoksnis;
 
-    private HiddenLayer hiddenLayer;
+    private PasleptasSluoksnis pasleptasSluoksnis;
 
-    private OutputLayer outputLayer;
+    private IsvestiesSluoksnis isvestiesSluoksnis;
 
-    public GammaEngine(int learningStage) {
-        this.learningStage = learningStage;
-        initialize();
+    public BotoVariklis(int mokymosiStadija) {
+        this.mokymosiStadija = mokymosiStadija;
+        sudaryti();
     }
 
-    public void initialize() {
+    public void sudaryti() {
 
-        inputLayer = new InputLayer();
-        inputLayer.initialize(27);
+        ivestiesSluoksnis = new IvestiesSluoksnis();
+        ivestiesSluoksnis.sudaryti(27);
 
-        hiddenLayer = new HiddenLayer();
-        hiddenLayer.initialize(9);
+        pasleptasSluoksnis = new PasleptasSluoksnis();
+        pasleptasSluoksnis.sudaryti(9);
 
-        outputLayer = new OutputLayer();
-        outputLayer.initialize(1);
+        isvestiesSluoksnis = new IsvestiesSluoksnis();
+        isvestiesSluoksnis.sudaryti(1);
     }
 
     @Override
-    public int makeMove(Board board, PlayerEnum forPlayer, boolean trainingEnabled) {
+    public int eiti(Lenta lenta, Langeliai zaidejas, boolean mokymasis) {
 
-        inputLayer.fire(board);
-        hiddenLayer.fire(inputLayer, forPlayer);
-        int move = outputLayer.fire(hiddenLayer);
+        ivestiesSluoksnis.pradeti(lenta);
+        pasleptasSluoksnis.pradeti(ivestiesSluoksnis, zaidejas);
+        int ejimas = isvestiesSluoksnis.pradeti(pasleptasSluoksnis);
 
-        board.move(move, forPlayer);
+        lenta.ejimas(ejimas, zaidejas);
 
-        if (trainingEnabled) {
-            if (board.isWon(forPlayer)) {
-                if (learningStage >= 1) {
-                    hiddenLayer.reward(outputLayer.getNeuron(0).getLastMoveIndex(), 0.05d);
-                    inputLayer.reward(outputLayer.getNeuron(0).getLastMoveIndex(), 0.075d,
-                            hiddenLayer.getNeuron(outputLayer.getNeuron(0).getLastMoveIndex()).getLastUsedInputNeurons());
+        if (mokymasis) {
+            if (lenta.laimeta(zaidejas)) {
+                if (mokymosiStadija >= 1) {
+                    pasleptasSluoksnis.duoti(isvestiesSluoksnis.gautiNeurona(0).gautiPraeitaEjima(), 0.05d);
+                    ivestiesSluoksnis.duoti(isvestiesSluoksnis.gautiNeurona(0).gautiPraeitaEjima(), 0.075d,
+                            pasleptasSluoksnis.gautiNeurona(isvestiesSluoksnis.gautiNeurona(0).gautiPraeitaEjima()).gautiPaskutiniNaudotaIvestiesNeurona());
 
-                    hiddenLayer.reward(outputLayer.getNeuron(0).getFirstMoveIndex(), 0.05d);
-                    inputLayer.reward(outputLayer.getNeuron(0).getFirstMoveIndex(), 0.075d,
-                            hiddenLayer.getNeuron(outputLayer.getNeuron(0).getLastMoveIndex()).getFirstUsedInputNeurons());
+                    pasleptasSluoksnis.duoti(isvestiesSluoksnis.gautiNeurona(0).gautiPirmaEjima(), 0.05d);
+                    ivestiesSluoksnis.duoti(isvestiesSluoksnis.gautiNeurona(0).gautiPirmaEjima(), 0.075d,
+                            pasleptasSluoksnis.gautiNeurona(isvestiesSluoksnis.gautiNeurona(0).gautiPraeitaEjima()).gautiPirmaNaudotaIvestiesNeurona());
                 }
             }
         }
 
-        return move;
+        return ejimas;
     }
 
     @Override
-    public void resetBetweenGames() {
-        for (int i = 0; i < hiddenLayer.getNumberOfNeurons(); i++) {
-            hiddenLayer.getNeuron(i).resetBetweenGames();
+    public void perjungtiTarpZaidimu() {
+        for (int i = 0; i < pasleptasSluoksnis.gautiNeuronuSkaiciu(); i++) {
+            pasleptasSluoksnis.gautiNeurona(i).perjungtiTarpZaidimu();
         }
 
-        for (int i = 0; i < outputLayer.getNumberOfNeurons(); i++) {
-            outputLayer.getNeuron(i).resetBetweenGames();
+        for (int i = 0; i < isvestiesSluoksnis.gautiNeuronuSkaiciu(); i++) {
+            isvestiesSluoksnis.gautiNeurona(i).perjungtiTarpZaidimu();
         }
 
     }
@@ -75,20 +75,20 @@ public class GammaEngine implements GameEngineInterface {
     public void print() {
         System.out.println();
         System.out.println("==================================================");
-        System.out.println("I n p u t  L a y e r");
+        System.out.println("Ivesties sluoksnis");
         System.out.println("==================================================");
-        inputLayer.print();
+        ivestiesSluoksnis.spausdinti();
 
         System.out.println();
         System.out.println("==================================================");
-        System.out.println("H i d d e n  L a y e r");
+        System.out.println("Pasleptas sluoksnis");
         System.out.println("==================================================");
-        hiddenLayer.print();
+        pasleptasSluoksnis.spausdinti();
 
         System.out.println();
         System.out.println("==================================================");
-        System.out.println("O u t p u t  L a y e r");
+        System.out.println("Isvesties sluoksnis");
         System.out.println("==================================================");
-        outputLayer.print();
+        isvestiesSluoksnis.spausdinti();
     }
 }

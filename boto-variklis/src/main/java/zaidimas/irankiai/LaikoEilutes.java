@@ -1,4 +1,4 @@
-package de.codecentric.game.tools;
+package zaidimas.irankiai;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,45 +6,45 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimeSeries {
+public class LaikoEilutes {
 
-    private List<Integer> gammaTimeSeries = new ArrayList<>();
-    private List<Integer> randomTimeSeries = new ArrayList<>();
-    private List<Integer> drawsTimeSeries = new ArrayList<>();
+    private List<Integer> botoLaikoEilutes = new ArrayList<>();
+    private List<Integer> randomLaikoEilutes = new ArrayList<>();
+    private List<Integer> lygiujuLaikoEilutes = new ArrayList<>();
 
-    public void add(int gammaWins, int randomWins, int draws) {
-        gammaTimeSeries.add(gammaWins);
-        randomTimeSeries.add(randomWins);
-        drawsTimeSeries.add(draws);
+    public void prideti(int botoLaimejimai, int randomLaimejimai, int lygiosios) {
+        botoLaikoEilutes.add(botoLaimejimai);
+        randomLaikoEilutes.add(randomLaimejimai);
+        lygiujuLaikoEilutes.add(lygiosios);
     }
 
-    public void write(String fileName) {
+    public void spausdintiIFaila(String failas) {
         BufferedWriter writer = null;
         try {
-            File timeSeriesFile = new File(fileName);
-            writer = new BufferedWriter(new FileWriter(timeSeriesFile));
+            File laikoEiluciuFailas = new File(failas);
+            writer = new BufferedWriter(new FileWriter(laikoEiluciuFailas));
 
             int i = 1;
-            writer.write("Games:,");
-            for (Integer n : gammaTimeSeries) {
+            writer.write("Zaidimai:,");
+            for (Integer n : botoLaikoEilutes) {
                 writer.write("M" + i++ + ",");
             }
             writer.newLine();
 
-            writer.write("Gamma wins:,");
-            for (Integer n : gammaTimeSeries) {
+            writer.write("Boto laimejimai:,");
+            for (Integer n : botoLaikoEilutes) {
                 writer.write(n + ",");
             }
             writer.newLine();
 
-            writer.write("Random wins:,");
-            for (Integer n : randomTimeSeries) {
+            writer.write("Random kompiuterio laimejimai:,");
+            for (Integer n : randomLaikoEilutes) {
                 writer.write(n + ",");
             }
             writer.newLine();
 
-            writer.write("Draws:,");
-            for (Integer n : drawsTimeSeries) {
+            writer.write("Lygiosios:,");
+            for (Integer n : lygiujuLaikoEilutes) {
                 writer.write(n + ",");
             }
             writer.newLine();

@@ -1,28 +1,28 @@
-package de.codecentric.game.tools;
+package zaidimas.irankiai;
 
-import de.codecentric.game.tictactoe.game.PlayerEnum;
+import zaidimas.tictactoe.Langeliai;
 
-public class PlayerToggle {
+public class ZaidejoPriskirimas {
 
-    private PlayerEnum gammaPlayer = PlayerEnum.X;
+    private Langeliai botas = Langeliai.X;
 
-    private PlayerEnum opponentPlayer = PlayerEnum.O;
+    private Langeliai priesininkas = Langeliai.O;
 
-    public PlayerEnum getGammaPlayer() {
-        return gammaPlayer;
+    public Langeliai gautiBota() {
+        return botas;
     }
 
-    public PlayerEnum getOpponentPlayer() {
-        return opponentPlayer;
+    public Langeliai gautiPriesininka() {
+        return priesininkas;
     }
 
-    public void toggle() {
-        if (gammaPlayer == PlayerEnum.X) {
-            gammaPlayer = PlayerEnum.O;
-            opponentPlayer = PlayerEnum.X;
+    public void priskirti() {
+        if (botas == Langeliai.X) {
+            botas = Langeliai.O;
+            priesininkas = Langeliai.X;
         } else {
-            gammaPlayer = PlayerEnum.X;
-            opponentPlayer = PlayerEnum.O;
+            botas = Langeliai.X;
+            priesininkas = Langeliai.O;
         }
     }
 }

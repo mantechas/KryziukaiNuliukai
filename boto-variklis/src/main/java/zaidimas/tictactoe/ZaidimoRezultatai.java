@@ -1,10 +1,10 @@
-package de.codecentric.game.playing;
+package zaidimas.tictactoe;
 
-public enum GameResultEnum {
+public enum ZaidimoRezultatai {
 
-    ENGINE_WON,
+    Botas_Laimejo,
 
-    OPPONENT_WON,
+    Priesininkas_Laimejo,
 
-    DRAW;
+    Lygiosios;
 }

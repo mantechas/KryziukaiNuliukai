@@ -1,73 +1,73 @@
-package de.codecentric.neuralnet.layer;
+package neuroninisTinklas.sluoksnis;
 
-import de.codecentric.game.tictactoe.game.PlayerEnum;
-import de.codecentric.neuralnet.neuron.HiddenNeuron;
+import zaidimas.tictactoe.Langeliai;
+import neuroninisTinklas.neuronas.PasleptiNeuronai;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HiddenLayer extends AbstractLayer {
+public class PasleptasSluoksnis extends AbstraktusSluoksnis {
 
-    private List<HiddenNeuron> hiddenNeurons;
+    private List<PasleptiNeuronai> pasleptiNeuronai;
 
     @Override
     public void subInitialize() {
-        hiddenNeurons = new ArrayList<>();
-        for (int i = 0; i < getNumberOfNeurons(); i++) {
-            HiddenNeuron n = new HiddenNeuron();
-            n.initialize(i,27, 1);
-            hiddenNeurons.add(n);
+        pasleptiNeuronai = new ArrayList<>();
+        for (int i = 0; i < gautiNeuronuSkaiciu(); i++) {
+            PasleptiNeuronai neuronas = new PasleptiNeuronai();
+            neuronas.priskirti(i,27, 1);
+            pasleptiNeuronai.add(neuronas);
         }
     }
 
     @Override
-    public HiddenNeuron getNeuron(int num) {
-        return hiddenNeurons.get(num);
+    public PasleptiNeuronai gautiNeurona(int numeris) {
+        return pasleptiNeuronai.get(numeris);
     }
 
-    public void fire(InputLayer inputLayer, PlayerEnum player) {
+    public void pradeti(IvestiesSluoksnis ivestiesSluoksnis, Langeliai zaidejas) {
 
-        for (int i = 0; i < getNumberOfNeurons(); i++) {
-            hiddenNeurons.get(i).activate(inputLayer.getFields(), inputLayer.getValues(), inputLayer.getOutputWeigths(i), player);
+        for (int i = 0; i < gautiNeuronuSkaiciu(); i++) {
+            pasleptiNeuronai.get(i).aktyvuoti(ivestiesSluoksnis.gautiLaukus(), ivestiesSluoksnis.gautiReiksmes(), ivestiesSluoksnis.gautiIsvestiesSvorius(i), zaidejas);
         }
     }
 
-    public List<Double> getOutputWeigths(int num) {
+    public List<Double> gautiIsvestiesSvorius(int numeris) {
 
-        List<Double> weights = new ArrayList<>();
-        for (int i = 0; i < getNumberOfNeurons(); i++) {
-            weights.add(hiddenNeurons.get(i).getOutputWeights().get(num));
+        List<Double> svoriai = new ArrayList<>();
+        for (int i = 0; i < gautiNeuronuSkaiciu(); i++) {
+            svoriai.add(pasleptiNeuronai.get(i).gautiIsvestiesSvorius().get(numeris));
         }
 
-        return weights;
+        return svoriai;
     }
 
-    public List<Boolean> candidateMoves() {
+    public List<Boolean> kandidatinisEjimas() {
 
-        List<Boolean> candidateMoves = new ArrayList<>();
-        for (int i = 0; i < getNumberOfNeurons(); i++) {
-            candidateMoves.add(hiddenNeurons.get(i).isCandidateMove());
+        List<Boolean> kandidatinisEjimas = new ArrayList<>();
+        for (int i = 0; i < gautiNeuronuSkaiciu(); i++) {
+            kandidatinisEjimas.add(pasleptiNeuronai.get(i).kandidatinisEjimas());
         }
 
-        return candidateMoves;
+        return kandidatinisEjimas;
     }
 
-    public List<Double> positionValues() {
+    public List<Double> vietosReiksmes() {
 
-        List<Double> positionValues = new ArrayList<>();
-        for (int i = 0; i < getNumberOfNeurons(); i++) {
-            positionValues.add(hiddenNeurons.get(i).getPositionValue());
+        List<Double> vietosReiksmes = new ArrayList<>();
+        for (int i = 0; i < gautiNeuronuSkaiciu(); i++) {
+            vietosReiksmes.add(pasleptiNeuronai.get(i).gautiVietosReiksme());
         }
 
-        return positionValues;
+        return vietosReiksmes;
     }
 
-    public void reward(int index, double value) {
-        HiddenNeuron neuron = getNeuron(index);
-        neuron.getOutputWeights().set(0, neuron.getOutputWeights().get(0) + value);
+    public void duoti(int indeksas, double reiksme) {
+        PasleptiNeuronai neuronas = gautiNeurona(indeksas);
+        neuronas.gautiIsvestiesSvorius().set(0, neuronas.gautiIsvestiesSvorius().get(0) + reiksme);
 
-        if (neuron.getOutputWeights().get(0) >= 1) {
-            neuron.getOutputWeights().set(0, 0.999d);
+        if (neuronas.gautiIsvestiesSvorius().get(0) >= 1) {
+            neuronas.gautiIsvestiesSvorius().set(0, 0.999d);
         }
 
     }

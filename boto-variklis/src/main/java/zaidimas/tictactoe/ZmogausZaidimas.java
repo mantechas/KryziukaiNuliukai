@@ -1,9 +1,9 @@
-package de.codecentric.game.playing;
+package zaidimas.tictactoe;
 
-import de.codecentric.game.tictactoe.game.Board;
-import de.codecentric.game.tictactoe.game.PlayerEnum;
-import de.codecentric.neuralnet.GammaEngine;
-import de.codecentric.neuralnet.Training;
+import zaidimas.tictactoe.Lenta;
+import zaidimas.tictactoe.Langeliai;
+import neuroninisTinklas.BotoVariklis;
+import neuroninisTinklas.Mokymasis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -11,55 +11,55 @@ import org.springframework.stereotype.Component;
 import java.util.Scanner;
 
 @Component
-public class HumanPlay {
+public class ZmogausZaidimas {
 
     @Autowired
-    private Training training;
+    private Mokymasis mokymasis;
 
-    @Value("${learning.stage}")
-    private int learningStage;
+    @Value("${mokymosi.stadija}")
+    private int mokymosiStadija;
 
-    public void play() {
+    public void Zaisti() {
 
-        GammaEngine gammaEngine = new GammaEngine(learningStage);
-        training.train(gammaEngine);
+        BotoVariklis botoVariklis = new BotoVariklis(mokymosiStadija);
+        mokymasis.mokyti(botoVariklis);
 
-        Board board = new Board();
+        Lenta lenta = new Lenta();
 
-        Scanner scanner = new Scanner(System.in);
-        int inputToken = -1;
-        while (inputToken != 0) {
+        Scanner skaneris = new Scanner(System.in);
+        int ivestiesTokenas = -1;
+        while (ivestiesTokenas != 0) {
 
-            board.printToScreen();
-            System.out.print("Your move: ");
+            lenta.spausdinti();
+            System.out.print("Tavo Ejimas: ");
 
-            inputToken = Integer.parseInt(scanner.nextLine());
-            if (board.isValid(inputToken)) {
-                board.move(inputToken, PlayerEnum.O);
-                boolean isWon = checkWon(board, PlayerEnum.O, "You isWon!");
-                boolean isDraw = checkDraw(board);
+            ivestiesTokenas = Integer.parseInt(skaneris.nextLine());
+            if (lenta.yraLeistinas(ivestiesTokenas)) {
+                lenta.ejimas(ivestiesTokenas, Langeliai.O);
+                boolean Laimeta = PatikrintiLaimejima(lenta, Langeliai.O, "Tu laimejai!");
+                boolean Lygiosios = PatikrintiLygiasias(lenta);
 
-                if (!isWon && !isDraw) {
-                    int computerMove = gammaEngine.makeMove(board.copy(), PlayerEnum.X, false);
-                    board.move(computerMove, PlayerEnum.X);
-                    checkWon(board, PlayerEnum.X, "Computer isWon!");
+                if (!Laimeta && !Lygiosios) {
+                    int botoEjimas = botoVariklis.eiti(lenta.kopijuoti(), Langeliai.X, false);
+                    lenta.ejimas(botoEjimas, Langeliai.X);
+                    PatikrintiLaimejima(lenta, Langeliai.X, "Botas laimejo!");
 
                     System.out.println("");
                 } else {
-                    gammaEngine.resetBetweenGames();
+                    botoVariklis.perjungtiTarpZaidimu();
                 }
             } else {
-                System.out.println("INVALID MOVE!");
+                System.out.println("Neleistinas ejimas!");
             }
         }
-        scanner.close();
+        skaneris.close();
     }
 
-    private boolean checkWon(Board board, PlayerEnum owner, String message) {
-        if (board.isWon(owner)) {
-            board.printToScreen();
-            System.out.println(message);
-            board.initialize();
+    private boolean PatikrintiLaimejima(Lenta lenta, Langeliai savininkas, String zinute) {
+        if (lenta.laimeta(savininkas)) {
+            lenta.spausdinti();
+            System.out.println(zinute);
+            lenta.sudaryti();
 
             return true;
         }
@@ -67,11 +67,11 @@ public class HumanPlay {
         return  false;
     }
 
-    private boolean checkDraw(Board board) {
-        if (board.validMoves().size() == 0) {
-            board.printToScreen();
+    private boolean PatikrintiLygiasias(Lenta lenta) {
+        if (lenta.galimiEjimai().isEmpty()) {
+            lenta.spausdinti();
             System.out.println("Draw!");
-            board.initialize();
+            lenta.sudaryti();
 
             return true;
         }

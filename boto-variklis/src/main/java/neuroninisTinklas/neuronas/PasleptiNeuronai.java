@@ -1,93 +1,93 @@
-package de.codecentric.neuralnet.neuron;
+package neuroninisTinklas.neuronas;
 
-import de.codecentric.game.tictactoe.game.Field;
-import de.codecentric.game.tictactoe.game.PlayerEnum;
+import zaidimas.tictactoe.Laukas;
+import zaidimas.tictactoe.Langeliai;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class HiddenNeuron extends Neuron {
+public class PasleptiNeuronai extends Neuronas {
 
-    private boolean isCandidateMove;
+    private boolean kandidatinisEjimas;
 
-    private double positionValue;
+    private double pozicijosReiksme;
 
-    private List<Integer> firstUsedInputNeurons;
+    private List<Integer> pirmasPanaudotasIvestiesNeuronas;
 
-    private List<Integer> lastUsedInputNeurons = new ArrayList<>();
+    private List<Integer> paskutinisPanaudotasIvestiesNeuronas = new ArrayList<>();
 
-    public void activate(List<Field> fields, List<Double> values, List<Double> inputWeights, PlayerEnum forPlayer) {
+    public void aktyvuoti(List<Laukas> laukai, List<Double> reiksmes, List<Double> ivestiesSvoriai, Langeliai zaidejas) {
 
-        setInputWeights(inputWeights);
+        priskirtiIvestiesSvorius(ivestiesSvoriai);
 
-        int relevantFieldNum = getNumber() * 3;
+        int numatomasLangelioNumeris = gautiNumeri() * 3;
 
-        if (fields.get(relevantFieldNum).getOwner() == PlayerEnum.NONE) {
-            isCandidateMove = true;
+        if (laukai.get(numatomasLangelioNumeris).gautiSavininka() == Langeliai.Tuscias) {
+            kandidatinisEjimas = true;
         } else {
-            isCandidateMove = false;
+            kandidatinisEjimas = false;
         }
 
-        boolean isFirstMove = false;
-        if (firstUsedInputNeurons == null) {
-            firstUsedInputNeurons = new ArrayList<>();
-            isFirstMove = true;
+        boolean pirmasEjimas = false;
+        if (pirmasPanaudotasIvestiesNeuronas == null) {
+            pirmasPanaudotasIvestiesNeuronas = new ArrayList<>();
+            pirmasEjimas = true;
         }
-        lastUsedInputNeurons.clear();
+        paskutinisPanaudotasIvestiesNeuronas.clear();
 
         //
         // Using different input weights and different field values depending on the fact if a field is
         // empty, already owned or owned by the opponent.
         //
-        double sumOfInputWeights = 0d;
-        int inputNum = 0;
+        double ivestiesSvoriuSuma = 0d;
+        int ivestiesNumeris = 0;
         for (int i = 1; i <= 9; i++) {
-            if (fields.get(inputNum).getOwner() == PlayerEnum.NONE) {
-                sumOfInputWeights += (inputWeights.get(inputNum) * values.get(inputNum));
-                if (isFirstMove) {
-                    firstUsedInputNeurons.add(inputNum);
+            if (laukai.get(ivestiesNumeris).gautiSavininka() == Langeliai.Tuscias) {
+                ivestiesSvoriuSuma += (ivestiesSvoriai.get(ivestiesNumeris) * reiksmes.get(ivestiesNumeris));
+                if (pirmasEjimas) {
+                    pirmasPanaudotasIvestiesNeuronas.add(ivestiesNumeris);
                 }
-                lastUsedInputNeurons.add(inputNum);
-                inputNum += 3;
-            } else if (fields.get(inputNum + 1).getOwner() == forPlayer) {
-                sumOfInputWeights += (inputWeights.get(inputNum + 1) * (values.get(inputNum + 1) / 2));
-                if (isFirstMove) {
-                    firstUsedInputNeurons.add(inputNum + 1);
+                paskutinisPanaudotasIvestiesNeuronas.add(ivestiesNumeris);
+                ivestiesNumeris += 3;
+            } else if (laukai.get(ivestiesNumeris + 1).gautiSavininka() == zaidejas) {
+                ivestiesSvoriuSuma += (ivestiesSvoriai.get(ivestiesNumeris + 1) * (reiksmes.get(ivestiesNumeris + 1) / 2));
+                if (pirmasEjimas) {
+                    pirmasPanaudotasIvestiesNeuronas.add(ivestiesNumeris + 1);
                 }
-                lastUsedInputNeurons.add(inputNum + 1);
-                inputNum += 3;
+                paskutinisPanaudotasIvestiesNeuronas.add(ivestiesNumeris + 1);
+                ivestiesNumeris += 3;
             } else {
-                sumOfInputWeights += (inputWeights.get(inputNum + 2) * (values.get(inputNum + 2) / 4));
-                if (isFirstMove) {
-                    firstUsedInputNeurons.add(inputNum + 2);
+                ivestiesSvoriuSuma += (ivestiesSvoriai.get(ivestiesNumeris + 2) * (reiksmes.get(ivestiesNumeris + 2) / 4));
+                if (pirmasEjimas) {
+                    pirmasPanaudotasIvestiesNeuronas.add(ivestiesNumeris + 2);
                 }
-                lastUsedInputNeurons.add(inputNum + 2);
-                inputNum += 3;
+                paskutinisPanaudotasIvestiesNeuronas.add(ivestiesNumeris + 2);
+                ivestiesNumeris += 3;
             }
         }
 
-        positionValue = 1 / (1 + Math.exp(sumOfInputWeights * (-1)));
+        pozicijosReiksme = 1 / (1 + Math.exp(ivestiesSvoriuSuma * (-1)));
     }
 
-    public boolean isCandidateMove() {
-        return isCandidateMove;
+    public boolean kandidatinisEjimas() {
+        return kandidatinisEjimas;
     }
 
-    public double getPositionValue() {
-        return positionValue;
+    public double gautiVietosReiksme() {
+        return pozicijosReiksme;
     }
 
-    public List<Integer> getFirstUsedInputNeurons() {
-        return firstUsedInputNeurons;
+    public List<Integer> gautiPirmaNaudotaIvestiesNeurona() {
+        return pirmasPanaudotasIvestiesNeuronas;
     }
 
-    public List<Integer> getLastUsedInputNeurons() {
-        return lastUsedInputNeurons;
+    public List<Integer> gautiPaskutiniNaudotaIvestiesNeurona() {
+        return paskutinisPanaudotasIvestiesNeuronas;
     }
 
-    public void resetBetweenGames() {
-        firstUsedInputNeurons = null;
-        lastUsedInputNeurons.clear();
+    public void perjungtiTarpZaidimu() {
+        pirmasPanaudotasIvestiesNeuronas = null;
+        paskutinisPanaudotasIvestiesNeuronas.clear();
     }
 }

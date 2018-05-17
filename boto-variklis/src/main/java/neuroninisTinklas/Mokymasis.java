@@ -1,33 +1,33 @@
-package de.codecentric.neuralnet;
+package neuroninisTinklas;
 
-import de.codecentric.game.playing.AutoPlay;
-import de.codecentric.game.tools.PlayerToggle;
-import de.codecentric.game.tools.RandomEngine;
+import zaidimas.tictactoe.ZaidimasPriesKompiuteri;
+import zaidimas.irankiai.ZaidejoPriskirimas;
+import zaidimas.irankiai.RandomEjimai;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Training {
+public class Mokymasis {
 
     @Autowired
-    private AutoPlay autoPlay;
+    private ZaidimasPriesKompiuteri savarankiskasZaidimas;
 
-    @Value("${training.runs}")
-    private int trainingRuns;
+    @Value("${mokymosi.kartai}")
+    private int mokymosiKartai;
 
-    @Value("${learning.stage}")
+    @Value("${mokymosi.stadija}")
     private int learningStage;
 
-    public void train(GammaEngine gammaEngine) {
+    public void mokyti(BotoVariklis botoVariklis) {
 
-        RandomEngine opponentEngine = new RandomEngine();
-        PlayerToggle playerToggle = new PlayerToggle();
+        RandomEjimai priesininkoVariklis = new RandomEjimai();
+        ZaidejoPriskirimas zaidejoPriskirimas = new ZaidejoPriskirimas();
 
-        for (int i = 0; i < trainingRuns; i++) {
-            autoPlay.play(gammaEngine, opponentEngine,
-                    playerToggle.getGammaPlayer(), playerToggle.getOpponentPlayer(), true);
-            playerToggle.toggle();
+        for (int i = 0; i < mokymosiKartai; i++) {
+            savarankiskasZaidimas.zaisti(botoVariklis, priesininkoVariklis,
+                    zaidejoPriskirimas.gautiBota(), zaidejoPriskirimas.gautiPriesininka(), true);
+            zaidejoPriskirimas.priskirti();
         }
     }
 }
