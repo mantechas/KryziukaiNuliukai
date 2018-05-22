@@ -1,4 +1,4 @@
-package neuroninisTinklas.neuronas;
+package neuroninisTinklas;
 
 import java.util.ArrayList;
 import java.util.List;

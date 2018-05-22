@@ -1,11 +1,8 @@
-package zaidimas.tictactoe;
+package zaidimas;
 
-import zaidimas.tictactoe.Lenta;
-import zaidimas.tictactoe.Langeliai;
 import neuroninisTinklas.BotoVariklis;
 import neuroninisTinklas.Mokymasis;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
@@ -16,27 +13,25 @@ public class ZmogausZaidimas {
     @Autowired
     private Mokymasis mokymasis;
 
-    @Value("${mokymosi.stadija}")
-    private int mokymosiStadija;
-
+    //Pradėti žmogaus žaidimą prieš apsimokytą botą
     public void Zaisti() {
 
-        BotoVariklis botoVariklis = new BotoVariklis(mokymosiStadija);
+        BotoVariklis botoVariklis = new BotoVariklis();
         mokymasis.mokyti(botoVariklis);
 
         Lenta lenta = new Lenta();
 
         Scanner skaneris = new Scanner(System.in);
-        int ivestiesTokenas = -1;
-        while (ivestiesTokenas != 0) {
+        int Ivestis = -1;
+        while (Ivestis != 0) {
 
             lenta.spausdinti();
             System.out.print("Tavo Ejimas: ");
 
-            ivestiesTokenas = Integer.parseInt(skaneris.nextLine());
-            if (lenta.yraLeistinas(ivestiesTokenas)) {
-                lenta.ejimas(ivestiesTokenas, Langeliai.O);
-                boolean Laimeta = PatikrintiLaimejima(lenta, Langeliai.O, "Tu laimejai!");
+            Ivestis = Integer.parseInt(skaneris.nextLine());
+            if (lenta.yraLeistinas(Ivestis)) {
+                lenta.ejimas(Ivestis, Langeliai.O);
+                boolean Laimeta = PatikrintiLaimejima(lenta, Langeliai.O, "Tu laimėjai!");
                 boolean Lygiosios = PatikrintiLygiasias(lenta);
 
                 if (!Laimeta && !Lygiosios) {
@@ -55,6 +50,7 @@ public class ZmogausZaidimas {
         skaneris.close();
     }
 
+    //Patikrinamas laimėjimas
     private boolean PatikrintiLaimejima(Lenta lenta, Langeliai savininkas, String zinute) {
         if (lenta.laimeta(savininkas)) {
             lenta.spausdinti();
@@ -67,10 +63,11 @@ public class ZmogausZaidimas {
         return  false;
     }
 
+    //Patikrinamos lygiosios
     private boolean PatikrintiLygiasias(Lenta lenta) {
         if (lenta.galimiEjimai().isEmpty()) {
             lenta.spausdinti();
-            System.out.println("Draw!");
+            System.out.println("Lygiosios!");
             lenta.sudaryti();
 
             return true;

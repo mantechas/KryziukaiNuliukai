@@ -1,10 +1,5 @@
-package zaidimas.tictactoe;
+package zaidimas;
 
-import zaidimas.tictactoe.ZaidimasPriesKompiuteri;
-import zaidimas.tictactoe.ZaidimoRezultatai;
-import zaidimas.irankiai.ZaidejoPriskirimas;
-import zaidimas.irankiai.RandomEjimai;
-import zaidimas.irankiai.LaikoEilutes;
 import neuroninisTinklas.BotoVariklis;
 import neuroninisTinklas.Mokymasis;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,42 +7,40 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ZaidimasPriesSavePati {
+public class ZaidimasPriesKompiuteri {
 
     @Autowired
     private RandomEjimai randomVariklis;
 
     @Autowired
-    private ZaidimasPriesKompiuteri zaidimasPrieskompiuteri;
+    private ZaidimasPriesSavePati zaidimasPrieskompiuteri;
 
     @Autowired
     private Mokymasis mokymasis;
 
     @Value("${zaidimoPriesSave.zaidimai}")
-    private int priesSavePatiZaidimai;
+    private int priesKompiuteriZaidimai;
 
     @Value("${zaidimoPriesSave.raundai}")
-    private int priesSavePatiRoundai;
+    private int priesKompiuteriRoundai;
 
-    @Value("${mokymosi.stadija}")
-    private int mokymosiStadija;
 
     public void Zaisti() {
 
-        LaikoEilutes bendraSeries = new LaikoEilutes();
-        for (int j = 0; j < priesSavePatiRoundai; j++) {
+        Spausdinimas bendraSeries = new Spausdinimas();
+        for (int j = 0; j < priesKompiuteriRoundai; j++) {
 
-            BotoVariklis botoVariklis = new BotoVariklis(mokymosiStadija);
+            BotoVariklis botoVariklis = new BotoVariklis();
             mokymasis.mokyti(botoVariklis);
 
             int botoLaimejimai = 0;
             int priesininkoLaimejimai = 0;
             int lygiosios = 0;
-            LaikoEilutes laikoEilutes = new LaikoEilutes();
+            Spausdinimas laikoEilutes = new Spausdinimas();
 
             ZaidejoPriskirimas zaidejoPriskirimas = new ZaidejoPriskirimas();
 
-            for (int i = 0; i < priesSavePatiZaidimai; i++) {
+            for (int i = 0; i < priesKompiuteriZaidimai; i++) {
 
                 ZaidimoRezultatai zaidimoRezultatai = zaidimasPrieskompiuteri.zaisti(botoVariklis, randomVariklis,
                         zaidejoPriskirimas.gautiBota(), zaidejoPriskirimas.gautiPriesininka(), false);
@@ -72,7 +65,6 @@ public class ZaidimasPriesSavePati {
             laikoEilutes.spausdintiIFaila("Rezultatai\\boto-" + (j+1) + "-rez.csv");
             bendraSeries.prideti(botoLaimejimai, priesininkoLaimejimai, lygiosios);
         }
-
         bendraSeries.spausdintiIFaila("Rezultatai\\bendri-rez.csv");
     }
 }

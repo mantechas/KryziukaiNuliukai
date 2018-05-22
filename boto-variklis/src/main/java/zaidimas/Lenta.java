@@ -1,4 +1,4 @@
-package zaidimas.tictactoe;
+package zaidimas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,141 +7,120 @@ import java.util.Map;
 
 public class Lenta {
 
-    private static final int Eilutes = 3;
-
-    private static final int Stulpeliai = 3;
-
     private Map<Integer, Laukas> zaidimoLenta = new HashMap<>();
 
     public Lenta() {
         sudaryti();
     }
-
+    
+    //Sudaroma Žaidimo lenta
     public void sudaryti() {
-        for (int eilute = 1; eilute <= Eilutes; eilute++) {
-            for (int stulpelis = 1; stulpelis <= Stulpeliai; stulpelis++) {
+        for (int eilute = 1; eilute <= 3; eilute++) {
+            for (int stulpelis = 1; stulpelis <= 3; stulpelis++) {
                 Laukas laukas = new Laukas(skaicius(eilute, stulpelis));
                 zaidimoLenta.put(skaicius(eilute, stulpelis), laukas);
             }
         }
     }
 
+    //Žaidimo ėjimas
     public void ejimas(int skaicius, Langeliai savininkas) {
         if (zaidimoLenta.get(skaicius).gautiSavininka() != Langeliai.Tuscias) {
             throw new RuntimeException("Negalimas ejimas, langelis jau užimtas: " + skaicius);
         }
-
         Laukas langelis = zaidimoLenta.get(skaicius);
         langelis.priskirtiSavininka(savininkas);
     }
-
-    public Lenta kopijuoti() {
-        Lenta lenta = new Lenta();
-        for (int eilute = 1; eilute <= Eilutes; eilute++) {
-            for (int stulpelis = 1; stulpelis <= Stulpeliai; stulpelis++) {
-                Laukas langelis = this.zaidimoLenta.get(skaicius(eilute, stulpelis));
-                lenta.priskirtiLangeli(langelis.gautiNumeri(), langelis.kopijuoti());
-            }
-        }
-
-        return lenta;
-    }
-
+    
+    //Galimu ejimu sarasas
     public List<Integer> galimiEjimai() {
-
         List<Integer> galimiEjimai = new ArrayList<>();
-        for (int eilute = 1; eilute <= Eilutes; eilute++) {
-            for (int stulpelis = 1; stulpelis <= Stulpeliai; stulpelis++) {
-                if (Lenta.this.yraLeistinas(eilute, stulpelis)) {
+        for (int eilute = 1; eilute <= 3; eilute++) {
+            for (int stulpelis = 1; stulpelis <= 3; stulpelis++) {
+                if (Lenta.this.yraLeistinas((skaicius(eilute, stulpelis)))) {
                     galimiEjimai.add(skaicius(eilute, stulpelis));
                 }
             }
         }
-
         return galimiEjimai;
     }
-
-    public boolean yraLeistinas(int eilute, int stulpelis) {
-        return yraLeistinas((skaicius(eilute, stulpelis)));
+    
+    //Kopijuojama žaidimo lenta
+    public Lenta kopijuoti() {
+        Lenta lenta = new Lenta();
+        for (int eilute = 1; eilute <= 3; eilute++) {
+            for (int stulpelis = 1; stulpelis <= 3; stulpelis++) {
+                Laukas langelis = this.zaidimoLenta.get(skaicius(eilute, stulpelis));
+                lenta.priskirtiLangeli(langelis.gautiNumeri(), langelis.kopijuoti());
+            }
+        }
+        return lenta;
     }
 
+
+    //Tikrinama ar langelis yra leistinas ejimui
     public boolean yraLeistinas(int vieta) {
 
-        if (vieta > Eilutes * Stulpeliai) {
+        if (vieta > 3 * 3) { //Jei skaičius viršija ribas
             return false;
-        } else if (zaidimoLenta.get(vieta).gautiSavininka() == Langeliai.Tuscias) {
+        } else if (zaidimoLenta.get(vieta).gautiSavininka() == Langeliai.Tuscias) { // Jei langelis tuščias
             return true;
         } else {
-            return false;
+            return false; 
         }
     }
 
-
+    //Tikrinamas žaidimo laimėjimas
     public boolean laimeta(Langeliai zaidejas) {
 
-        boolean laimeta = false;
+        boolean laimeta = false; //Ar laimėta
 
-        for (int eilute = 1; eilute <= Eilutes; eilute++) {
+        //Tikrinamas laimėjimas eilutėmis
+        for (int eilute = 1; eilute <= 3; eilute++) {
             int kiekis = 0;
-            for (int stulpelis = 1; stulpelis <= Stulpeliai; stulpelis++) {
+            for (int stulpelis = 1; stulpelis <= 3; stulpelis++) {
                 if (zaidimoLenta.get(skaicius(eilute, stulpelis)).gautiSavininka() == zaidejas) {
                     kiekis++;
                 } else {
                     break;
                 }
             }
-            if (kiekis == Stulpeliai) {
+            if (kiekis == 3) {
                 laimeta = true;
             }
         }
-
-        for (int stulpelis = 1; stulpelis <= Stulpeliai; stulpelis++) {
+        
+        
+        //Tikrinamas laimėjimas stulpeliais
+        for (int stulpelis = 1; stulpelis <= 3; stulpelis++) {
             int kiekis = 0;
-            for (int eilute = 1; eilute <= Eilutes; eilute++) {
+            for (int eilute = 1; eilute <= 3; eilute++) {
                 if (zaidimoLenta.get(skaicius(eilute, stulpelis)).gautiSavininka() == zaidejas) {
                     kiekis++;
                 } else {
                     break;
                 }
             }
-            if (kiekis == Eilutes) {
+            if (kiekis == 3) {
                 laimeta = true;
             }
         }
-
-        int istrizai = 0;
-        if (zaidimoLenta.get(skaicius(1, 1)).gautiSavininka() == zaidejas) {
-            istrizai++;
-        }
-        if (zaidimoLenta.get(skaicius(2, 2)).gautiSavininka() == zaidejas) {
-            istrizai++;
-        }
-        if (zaidimoLenta.get(skaicius(3, 3)).gautiSavininka() == zaidejas) {
-            istrizai++;
-        }
-
-        if (istrizai == Stulpeliai) {
+        //Tikrinamos istrižainės laimėjimai
+        if (zaidimoLenta.get(skaicius(1, 1)).gautiSavininka() == zaidejas && 
+           zaidimoLenta.get(skaicius(2, 2)).gautiSavininka() == zaidejas && 
+           zaidimoLenta.get(skaicius(3, 3)).gautiSavininka() == zaidejas){
             laimeta = true;
         }
-
-        istrizai = 0;
-        if (zaidimoLenta.get(skaicius(1, 3)).gautiSavininka() == zaidejas) {
-            istrizai++;
-        }
-        if (zaidimoLenta.get(skaicius(2, 2)).gautiSavininka() == zaidejas) {
-            istrizai++;
-        }
-        if (zaidimoLenta.get(skaicius(3, 1)).gautiSavininka() == zaidejas) {
-            istrizai++;
-        }
-
-        if (istrizai == Stulpeliai) {
+        if (zaidimoLenta.get(skaicius(1, 3)).gautiSavininka() == zaidejas && 
+           zaidimoLenta.get(skaicius(2, 2)).gautiSavininka() == zaidejas && 
+           zaidimoLenta.get(skaicius(3, 1)).gautiSavininka() == zaidejas){
             laimeta = true;
         }
 
         return laimeta;
     }
-
+    
+    //Tikrinama ar žaidimas baigėsi lygiosiomis
     public boolean lygiosios() {
         if (galimiEjimai().size() == 0) {
             return true;
@@ -150,8 +129,8 @@ public class Lenta {
         }
     }
 
+    //Nustatoma kas laimėjo žaidimą
     public boolean zaidimoPabaiga() {
-
         if (laimeta(Langeliai.O)) {
             spausdinti();
             System.out.println("Zaidimas laimetas: " + Langeliai.O.gautiAtstovavima() + "!");
@@ -173,31 +152,35 @@ public class Lenta {
 
         return false;
     }
+    
+    //Priskiriamas langelis
+    private void priskirtiLangeli(int skaicius, Laukas langelis) {
+        zaidimoLenta.put(skaicius, langelis);
+    }
 
+    //Gaunamas langelio skaičius
+    private int skaicius(int eilute, int stulpelis) {
+        return ((eilute-1) * 3) + stulpelis;
+    }
+        //Gaunamas žaidimo langelis
+    public Laukas gautiLangeli(int skaicius) {
+        return zaidimoLenta.get(skaicius);
+    }
+    
+    //Lentelės spausdinimas
     public void spausdinti() {
 
-        System.out.println("==========================");
-        for (int eilute = 1; eilute <= Eilutes; eilute++) {
-            for (int stulpelis = 1; stulpelis <= Stulpeliai; stulpelis++) {
+        for (int eilute = 1; eilute <= 3; eilute++) {
+            for (int stulpelis = 1; stulpelis <= 3; stulpelis++) {
                 Laukas langelis = zaidimoLenta.get(skaicius(eilute, stulpelis));
                 System.out.print(langelis.erdvesAtstovavimas());
             }
             System.out.println();
         }
-        System.out.println("==========================");
 
     }
+    
 
-    public Laukas gautiLangeli(int skaicius) {
-        return zaidimoLenta.get(skaicius);
-    }
 
-    private void priskirtiLangeli(int skaicius, Laukas langelis) {
-        zaidimoLenta.put(skaicius, langelis);
-    }
-
-    private int skaicius(int eilute, int stulpelis) {
-        return ((eilute-1) * Stulpeliai) + stulpelis;
-    }
 
 }

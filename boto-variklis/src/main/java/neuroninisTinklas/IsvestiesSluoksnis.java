@@ -1,7 +1,4 @@
-package neuroninisTinklas.sluoksnis;
-
-import neuroninisTinklas.neuronas.IsvestiesNeuronai;
-
+package neuroninisTinklas;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,10 +6,8 @@ public class IsvestiesSluoksnis extends AbstraktusSluoksnis {
 
     private List<IsvestiesNeuronai> isvestiesNeuronai;
 
-    private int kompiuterioEjimas;
-
     @Override
-    public void subInitialize() {
+    public void nustatyti() {
         isvestiesNeuronai = new ArrayList<>();
         for (int i = 0; i < gautiNeuronuSkaiciu(); i++) {
             IsvestiesNeuronai neuronas = new IsvestiesNeuronai();

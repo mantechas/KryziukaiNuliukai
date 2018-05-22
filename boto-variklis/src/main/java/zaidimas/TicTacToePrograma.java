@@ -1,8 +1,5 @@
 package zaidimas;
 
-import zaidimas.tictactoe.ZmogausZaidimas;
-import zaidimas.tictactoe.ZaidimasPriesSavePati;
-import neuroninisTinklas.Mokymasis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -17,16 +14,10 @@ import org.springframework.context.annotation.ComponentScan;
 public class TicTacToePrograma implements CommandLineRunner {
 
     @Autowired
-    private ZaidimasPriesSavePati zaidimasPriesSavePati;
+    private ZaidimasPriesKompiuteri zaidimasPriesSavePati;
 
     @Autowired
     private ZmogausZaidimas zmogausZaidimas;
-
-    @Autowired
-    private Mokymasis mokymasis;
-
-    @Value("${mokymosi.stadija}")
-    private int mokymosiStadija;
 
     @Value("${ijungtas.zaidimasPriesSave}")
     private boolean ijungtasZaidimasPriesSave;

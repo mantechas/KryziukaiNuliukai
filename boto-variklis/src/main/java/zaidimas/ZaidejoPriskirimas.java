@@ -1,18 +1,16 @@
-package zaidimas.irankiai;
-
-import zaidimas.tictactoe.Langeliai;
+package zaidimas;
 
 public class ZaidejoPriskirimas {
 
-    private Langeliai botas = Langeliai.X;
+    private Langeliai botas = Langeliai.X; //Priskiriami botui X langeliai
 
-    private Langeliai priesininkas = Langeliai.O;
+    private Langeliai priesininkas = Langeliai.O; //Priskiriami boto priešininkui O langeliai
 
-    public Langeliai gautiBota() {
+    public Langeliai gautiBota() { //Gaunamas botas
         return botas;
     }
 
-    public Langeliai gautiPriesininka() {
+    public Langeliai gautiPriesininka() { //Gaunamas priesininkas
         return priesininkas;
     }
 

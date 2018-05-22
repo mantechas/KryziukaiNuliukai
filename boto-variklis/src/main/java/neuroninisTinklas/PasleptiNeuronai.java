@@ -1,7 +1,7 @@
-package neuroninisTinklas.neuronas;
+package neuroninisTinklas;
 
-import zaidimas.tictactoe.Laukas;
-import zaidimas.tictactoe.Langeliai;
+import zaidimas.Laukas;
+import zaidimas.Langeliai;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +36,7 @@ public class PasleptiNeuronai extends Neuronas {
         }
         paskutinisPanaudotasIvestiesNeuronas.clear();
 
-        //
-        // Using different input weights and different field values depending on the fact if a field is
-        // empty, already owned or owned by the opponent.
-        //
+
         double ivestiesSvoriuSuma = 0d;
         int ivestiesNumeris = 0;
         for (int i = 1; i <= 9; i++) {

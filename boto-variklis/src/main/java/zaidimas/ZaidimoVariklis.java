@@ -1,7 +1,4 @@
-package zaidimas.tictactoe;
-
-import zaidimas.tictactoe.Lenta;
-import zaidimas.tictactoe.Langeliai;
+package zaidimas;
 
 public interface ZaidimoVariklis {
 

@@ -1,7 +1,6 @@
-package neuroninisTinklas.sluoksnis;
+package neuroninisTinklas;
 
-import zaidimas.tictactoe.Langeliai;
-import neuroninisTinklas.neuronas.PasleptiNeuronai;
+import zaidimas.Langeliai;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +10,7 @@ public class PasleptasSluoksnis extends AbstraktusSluoksnis {
     private List<PasleptiNeuronai> pasleptiNeuronai;
 
     @Override
-    public void subInitialize() {
+    public void nustatyti() {
         pasleptiNeuronai = new ArrayList<>();
         for (int i = 0; i < gautiNeuronuSkaiciu(); i++) {
             PasleptiNeuronai neuronas = new PasleptiNeuronai();
@@ -67,7 +66,7 @@ public class PasleptasSluoksnis extends AbstraktusSluoksnis {
         neuronas.gautiIsvestiesSvorius().set(0, neuronas.gautiIsvestiesSvorius().get(0) + reiksme);
 
         if (neuronas.gautiIsvestiesSvorius().get(0) >= 1) {
-            neuronas.gautiIsvestiesSvorius().set(0, 0.999d);
+            neuronas.gautiIsvestiesSvorius().set(0, 0.99d);
         }
 
     }

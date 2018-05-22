@@ -1,27 +1,27 @@
-package neuroninisTinklas.sluoksnis;
-
-import neuroninisTinklas.neuronas.Neuronas;
+package neuroninisTinklas;
 
 public abstract class AbstraktusSluoksnis {
 
-    private int neoronuKiekis;
+    private int neoronuKiekis; // neuronų kiekis
 
     public void sudaryti(int neoronuKiekis) {
         this.neoronuKiekis = neoronuKiekis;
-        subInitialize();
+        nustatyti();
     }
 
+    //Gauti neuronų kiekį
     public int gautiNeuronuSkaiciu() {
         return neoronuKiekis;
     }
 
+    //Spausdinama neurono informacija
     public void spausdinti() {
         for (int i = 0; i < gautiNeuronuSkaiciu(); i++) {
             gautiNeurona(i).spausdinti();
         }
     }
-
-    abstract void subInitialize();
+    
+    abstract void nustatyti();
 
     abstract Neuronas gautiNeurona(int numeris);
 

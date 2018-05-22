@@ -1,8 +1,8 @@
 package neuroninisTinklas;
 
-import zaidimas.tictactoe.ZaidimasPriesKompiuteri;
-import zaidimas.irankiai.ZaidejoPriskirimas;
-import zaidimas.irankiai.RandomEjimai;
+import zaidimas.ZaidimasPriesSavePati;
+import zaidimas.ZaidejoPriskirimas;
+import zaidimas.RandomEjimai;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -11,14 +11,12 @@ import org.springframework.stereotype.Component;
 public class Mokymasis {
 
     @Autowired
-    private ZaidimasPriesKompiuteri savarankiskasZaidimas;
+    private ZaidimasPriesSavePati savarankiskasZaidimas;
 
     @Value("${mokymosi.kartai}")
     private int mokymosiKartai;
 
-    @Value("${mokymosi.stadija}")
-    private int learningStage;
-
+    //Pradedamas mokinimasis
     public void mokyti(BotoVariklis botoVariklis) {
 
         RandomEjimai priesininkoVariklis = new RandomEjimai();
